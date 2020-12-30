@@ -14,9 +14,9 @@ import sys
 class LanguageModel:
     def __init__(self, step=3, embed_size=128, seq_length=20):
         """
-        :param step:  y is the (step's) word after the x seqence
-        :param embed_size: the ebmedding size of all words
-        :param seq_length: the length of sequence
+        :param step:  y is the (step's) word after the x seqence 步长？
+        :param embed_size: the ebmedding size of all words  不懂
+        :param seq_length: the length of sequence  不懂
         """
 
         self.seq_length = seq_length
@@ -25,30 +25,30 @@ class LanguageModel:
 
     def load_data(self, path):
         # read the entire text
-        text = open(path).read().strip().replace('\u3000', '').replace('\n', '')
+        text = open(path).read().strip().replace('\u3000', '').replace('\n', '') #把换行符、空格去掉
         print('corpus length:', len(text))
 
         # all the vocabularies
-        vocab = sorted(list(set(text)))
+        vocab = sorted(list(set(text)))  #排序？
         print('total words:', len(vocab))
 
         # create word-index dict
-        word_to_index = dict((c, i) for i, c in enumerate(vocab))
-        index_to_word = dict((i, c) for i, c in enumerate(vocab))
+        word_to_index = dict((c, i) for i, c in enumerate(vocab)) #字典
+        index_to_word = dict((i, c) for i, c in enumerate(vocab)) #字典
 
         # cut the text into fixed size sequences
         sentences = []
         next_words = []
 
         for i in range(0, len(text) - self.seq_length, self.step):
-            sentences.append(list(text[i:i + self.seq_length]))
-            next_words.append(text[i + self.seq_length])
+            sentences.append(list(text[i:i + self.seq_length])) #lstm模型,自己写过
+            next_words.append(text[i + self.seq_length]) #lstm模型,自己写过
         print('nb sequences:', len(sentences))
 
-        # generate training samples
-        X = np.asarray([[word_to_index[w] for w in sent[:]] for sent in sentences])
-        y = np.zeros((len(sentences), len(vocab)))
-        for i, word in enumerate(next_words):
+        # generate training samples  生成训练样本
+        X = np.asarray([[word_to_index[w] for w in sent[:]] for sent in sentences]) #生成一个鬼数组
+        y = np.zeros((len(sentences), len(vocab))) #生成一个鬼空数据
+        for i, word in enumerate(next_words): #一个不知道是什么的迭代器
             y[i, word_to_index[word]] = 1
 
         self.text = text
@@ -134,11 +134,11 @@ class LanguageModel:
 if __name__ == '__main__':
     model = LanguageModel(seq_length=10)
     model.load_data('novels/诡秘之主.txt')
-    model.load_model()
-    model.visualize_model()
-    model.compile_model(lr=0.00005)
-    model.fit_model(nb_epoch=10)
-    model.save("./model/keras_lstm_1000.h5")
+    #model.load_model()
+    #model.visualize_model()
+    #model.compile_model(lr=0.00005)
+    #model.fit_model(nb_epoch=10)
+    #model.save("./model/keras_lstm_1000.h5")
 
     for i in range(1, 3):
         print('Iteration:', i)

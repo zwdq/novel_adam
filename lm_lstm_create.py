@@ -88,7 +88,7 @@ class LanguageModel:
 
             generated = ''
             sentence = self.text[start_index:start_index + self.seq_length]
-            sentence = '我们今天一起来开会我'
+            sentence = '我们今天一起来开会我,一起去找帅哥美女去'
             generated += sentence
             print('--------Generating with seed:', sentence)
             sys.stdout.write(generated)
@@ -109,8 +109,8 @@ class LanguageModel:
 
 if __name__ == '__main__':
     
-    model = LanguageModel(seq_length=10)
-    model.load_data('novels/诡秘之主.txt')
+    model = LanguageModel(seq_length=20)
+    model.load_data('novels/天龙八部.txt')
     model.load_model()
 
     for i in range(1, 3):

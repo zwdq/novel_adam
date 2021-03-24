@@ -132,15 +132,15 @@ class LanguageModel:
 
 
 if __name__ == '__main__':
-    model = LanguageModel(seq_length=10)
-    model.load_data('novels/诡秘之主.txt')
+    model = LanguageModel(seq_length = 20)
+    model.load_data('novels/天龙八部.txt')
     model.load_model()
     model.visualize_model()
-    model.compile_model(lr=0.00005)
-    model.fit_model(nb_epoch=10)
-    #model.save("./model/keras_lstm_1000.h5")
+    model.compile_model(lr = 0.00005)
+    model.fit_model(nb_epoch = 1)
+    model.save("./model/keras_lstm_1000.h5")
 
-    for i in range(1, 3):
+    for i in range(1):
         print('Iteration:', i)
         model.generate_text()
         print()

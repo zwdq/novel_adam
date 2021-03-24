@@ -26,7 +26,7 @@ class LanguageModel:
 
     def load_data(self, path):
         # read the entire text
-        text = open(path).read().strip().replace('\u3000', '').replace('\n', '') #把换行符、空格去掉
+        text = open(path,encoding='utf-8').read().strip().replace('\u3000', '').replace('\n', '') #把换行符、空格去掉
         print('corpus length:', len(text))
 
         # all the vocabularies
@@ -35,19 +35,19 @@ class LanguageModel:
 
         # create word-index dict
         word_to_index = dict((c, i) for i, c in enumerate(vocab)) #字典
-        index_to_word = dict((i, c) for i, c in enumerate(vocab)) #字典
+        index_to_word = dict((i, c) for i, c in enumerate(vocab)) #key是index,value是word
 
         # cut the text into fixed size sequences
         sentences = []
         next_words = []
 
         for i in range(0, len(text) - self.seq_length, self.step):
-            sentences.append(list(text[i:i + self.seq_length])) #lstm模型,自己写过
-            next_words.append(text[i + self.seq_length]) #lstm模型,自己写过
+            sentences.append(list(text[i:i + self.seq_length])) #lstm模型,自己写过,x
+            next_words.append(text[i + self.seq_length]) #lstm模型,自己写过,y
         print('nb sequences:', len(sentences))
 
         # generate training samples  生成训练样本
-        X = np.asarray([[word_to_index[w] for w in sent[:]] for sent in sentences]) #生成一个鬼数组
+        X = np.asarray([[word_to_index[w] for w in sent[:]] for sent in sentences]) #抽取句子中各单词的序号
         y = np.zeros((len(sentences), len(vocab))) #生成一个鬼空数据
         for i, word in enumerate(next_words): #一个不知道是什么的迭代器
             y[i, word_to_index[word]] = 1
@@ -88,7 +88,7 @@ class LanguageModel:
 
             generated = ''
             sentence = self.text[start_index:start_index + self.seq_length]
-            sentence = '嘉穗今天又被主管怼了'
+            sentence = '我们今天一起来开会我'
             generated += sentence
             print('--------Generating with seed:', sentence)
             sys.stdout.write(generated)

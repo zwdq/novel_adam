@@ -16,7 +16,7 @@ class LanguageModel:
         """
         :param step:  y is the (step's) word after the x seqence 步长？
         :param embed_size: the ebmedding size of all words  不懂
-        :param seq_length: the length of sequence  不懂
+        :param seq_length: the length of sequence  
         """
 
         self.seq_length = seq_length
@@ -29,7 +29,7 @@ class LanguageModel:
         print('corpus length:', len(text))
 
         # all the vocabularies
-        vocab = sorted(list(set(text)))  #排序？
+        vocab = sorted(list(set(text)))  #
         print('total words:', len(vocab))
 
         # create word-index dict
@@ -46,9 +46,9 @@ class LanguageModel:
         print('nb sequences:', len(sentences))
 
         # generate training samples  生成训练样本
-        X = np.asarray([[word_to_index[w] for w in sent[:]] for sent in sentences]) #生成一个鬼数组
-        y = np.zeros((len(sentences), len(vocab))) #生成一个鬼空数据
-        for i, word in enumerate(next_words): #一个不知道是什么的迭代器
+        X = np.asarray([[word_to_index[w] for w in sent[:]] for sent in sentences]) #组
+        y = np.zeros((len(sentences), len(vocab))) #
+        for i, word in enumerate(next_words): #
             y[i, word_to_index[word]] = 1
 
         self.text = text
@@ -134,10 +134,10 @@ class LanguageModel:
 if __name__ == '__main__':
     model = LanguageModel(seq_length=10)
     model.load_data('novels/诡秘之主.txt')
-    #model.load_model()
-    #model.visualize_model()
-    #model.compile_model(lr=0.00005)
-    #model.fit_model(nb_epoch=10)
+    model.load_model()
+    model.visualize_model()
+    model.compile_model(lr=0.00005)
+    model.fit_model(nb_epoch=10)
     #model.save("./model/keras_lstm_1000.h5")
 
     for i in range(1, 3):

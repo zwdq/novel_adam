@@ -1,6 +1,6 @@
 from __future__ import print_function
-
 import tensorflow as tf
+import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Dense, Activation, LSTM
 from tensorflow.keras.optimizers import RMSprop
@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import sys
+import os
 
 
 class LanguageModel:
@@ -72,14 +73,20 @@ class LanguageModel:
         print(self.model.input_shape)
         print(self.model.output_shape)
 
-    def compile_model(self, lr=0.01):
+    def compile_model(self, lr = 0.01):
         # compile the model
-        optimizer = RMSprop(lr=lr)
+        optimizer = RMSprop(lr = lr)
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
-    def fit_model(self, batch_size=128, nb_epoch=1):
+    def fit_model(self, model_path, batch_size=128, nb_epoch=1):
+        if os.path.exists(model_path):
+            print("---------Loading Model---------")
+            self.model.load_weights(model_path)
         # fit the model with trainind data
-        self.history = self.model.fit(self.X, self.y, batch_size=batch_size, epochs=nb_epoch).history
+        log = keras.callbacks.TensorBoard()
+        earlystop = keras.callbacks.EarlyStopping(monitor= "accuracy",min_delta = 0.1,patience = 1)
+        modelckpt = keras.callbacks.ModelCheckpoint(model_path,save_best_only = (True),save_weights_only = (True))
+        self.history = self.model.fit(self.X, self.y, callbacks = [log,earlystop,modelckpt],batch_size=batch_size, epochs=nb_epoch).history
 
     def save(self,path):
         #print(self.history['acc'])
@@ -137,7 +144,7 @@ if __name__ == '__main__':
     model.load_model()
     model.visualize_model()
     model.compile_model(lr = 0.00005)
-    model.fit_model(nb_epoch = 50)
+    model.fit_model(nb_epoch = 50,model_path = "./model/keras_lstm_1000.h5")
     model.save("./model/keras_lstm_1000.h5")
 
     for i in range(1):

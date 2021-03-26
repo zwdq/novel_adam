@@ -29,7 +29,7 @@ class LanguageModel:
         print('corpus length:', len(text))
 
         # all the vocabularies
-        vocab = sorted(list(set(text)))  #
+        vocab = sorted(list(set(text)))  #把所有字去重置入一个集合
         print('total words:', len(vocab))
 
         # create word-index dict
@@ -46,8 +46,8 @@ class LanguageModel:
         print('nb sequences:', len(sentences))
 
         # generate training samples  生成训练样本
-        X = np.asarray([[word_to_index[w] for w in sent[:]] for sent in sentences]) #组
-        y = np.zeros((len(sentences), len(vocab))) #
+        X = np.asarray([[word_to_index[w] for w in sent[:]] for sent in sentences]) #一列序号
+        y = np.zeros((len(sentences), len(vocab))) #类似onehot编码，y是横着的1个1一堆0
         for i, word in enumerate(next_words): #
             y[i, word_to_index[word]] = 1
 
@@ -137,7 +137,7 @@ if __name__ == '__main__':
     model.load_model()
     model.visualize_model()
     model.compile_model(lr = 0.00005)
-    model.fit_model(nb_epoch = 1)
+    model.fit_model(nb_epoch = 50)
     model.save("./model/keras_lstm_1000.h5")
 
     for i in range(1):

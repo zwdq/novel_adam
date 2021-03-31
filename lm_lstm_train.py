@@ -78,7 +78,7 @@ class LanguageModel:
         optimizer = RMSprop(lr = lr)
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
-    def fit_model(self, model_path, batch_size=128, nb_epoch=1):
+    def fit_model(self, model_path, batch_size=1, nb_epoch=1):
         if os.path.exists(model_path):
             print("---------Loading Model---------")
             self.model.load_weights(model_path)

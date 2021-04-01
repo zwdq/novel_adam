@@ -13,7 +13,7 @@ import os
 
 
 class LanguageModel:
-    def __init__(self, step=3, embed_size=128, seq_length=20):
+    def __init__(self, step=3, embed_size=64, seq_length=20):
         """
         :param step:  y is the (step's) word after the x seqence 步长？
         :param embed_size: the ebmedding size of all words  不懂
@@ -38,6 +38,7 @@ class LanguageModel:
         index_to_word = dict((i, c) for i, c in enumerate(vocab)) #字典
 
         # cut the text into fixed size sequences
+        global sentences
         sentences = []
         next_words = []
 
@@ -78,7 +79,7 @@ class LanguageModel:
         optimizer = RMSprop(lr = lr)
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
-    def fit_model(self, model_path, batch_size=1, nb_epoch=1):
+    def fit_model(self, model_path, batch_size=16, nb_epoch=1):
         if os.path.exists(model_path):
             print("---------Loading Model---------")
             self.model.load_weights(model_path)
@@ -140,11 +141,12 @@ class LanguageModel:
 
 if __name__ == '__main__':
     model = LanguageModel(seq_length = 20)
-    model.load_data('novels/天龙八部.txt')
+    model.load_data('novels/遮天.txt')
+    print(sentences)
     model.load_model()
     model.visualize_model()
     model.compile_model(lr = 0.00005)
-    model.fit_model(nb_epoch = 50,model_path = "./model/keras_lstm_1000.h5")
+    model.fit_model(nb_epoch = 1,batch_size=128,model_path = "./model/keras_lstm_1000.h5")
     model.save("./model/keras_lstm_1000.h5")
 
     for i in range(1):

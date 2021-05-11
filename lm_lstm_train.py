@@ -87,9 +87,9 @@ class LanguageModel:
         '''
         # fit the model with trainind data
         log = keras.callbacks.TensorBoard()
-        earlystop = keras.callbacks.EarlyStopping(monitor = "accuracy",min_delta = 0.001,patience = 10)
+        earlystop = keras.callbacks.EarlyStopping(monitor = "accuracy",min_delta = 0.0001,patience = 10)
         modelckpt = keras.callbacks.ModelCheckpoint(model_path,save_best_only = (True),save_weights_only = (True))
-        self.history = self.model.fit(self.X, self.y, callbacks = [log,earlystop,modelckpt],batch_size=batch_size, epochs=nb_epoch).history
+        self.history = self.model.fit(self.X, self.y, callbacks = [log,earlystop,modelckpt],batch_size = batch_size, epochs = nb_epoch).history
 
     def save(self,path):
         #print(self.history['acc'])

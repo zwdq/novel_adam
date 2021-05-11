@@ -79,13 +79,15 @@ class LanguageModel:
         optimizer = RMSprop(lr = lr)
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
-    def fit_model(self, model_path, batch_size=16, nb_epoch=1):
+    def fit_model(self, model_path, batch_size = 16, nb_epoch = 1):
+        '''
         if os.path.exists(model_path):
             print("---------Loading Model---------")
             self.model.load_weights(model_path)
+        '''
         # fit the model with trainind data
         log = keras.callbacks.TensorBoard()
-        earlystop = keras.callbacks.EarlyStopping(monitor= "accuracy",min_delta = 0.1,patience = 1)
+        earlystop = keras.callbacks.EarlyStopping(monitor = "accuracy",min_delta = 0.001,patience = 10)
         modelckpt = keras.callbacks.ModelCheckpoint(model_path,save_best_only = (True),save_weights_only = (True))
         self.history = self.model.fit(self.X, self.y, callbacks = [log,earlystop,modelckpt],batch_size=batch_size, epochs=nb_epoch).history
 
@@ -117,15 +119,15 @@ class LanguageModel:
 
         for diversity in [0.2, 0.5, 1.0, 1.2]:
             print()
-            print('--------diversity:', diversity)
+            print('diversity:', diversity)
 
             generated = ''
             sentence = self.text[start_index:start_index + self.seq_length]
             generated += sentence
-            print('--------Generating with seed:', sentence)
+            print('Generating with seed:', sentence)
             sys.stdout.write(generated)
 
-            for i in range(400):
+            for i in range(15):
                 x = np.asarray([self.word_to_index[w] for w in sentence]).reshape([1, self.seq_length])
                 preds = self.predict(x)
                 next_index = self._sample(preds, diversity)
@@ -140,13 +142,13 @@ class LanguageModel:
 
 
 if __name__ == '__main__':
-    model = LanguageModel(seq_length = 20)
-    model.load_data('novels/遮天.txt')
-    print(sentences)
+    model = LanguageModel(seq_length = 5)
+    model.load_data('/Users/qiuqiandong/Documents/mycode/novel/唐诗.txt')
+    #print(sentences)
     model.load_model()
     model.visualize_model()
     model.compile_model(lr = 0.00005)
-    model.fit_model(nb_epoch = 1,batch_size=128,model_path = "./model/keras_lstm_1000.h5")
+    model.fit_model(nb_epoch = 50,batch_size = 128,model_path = "./model/keras_lstm_1000.h5")
     model.save("./model/keras_lstm_1000.h5")
 
     for i in range(1):
